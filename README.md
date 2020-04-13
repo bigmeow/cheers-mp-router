@@ -1,5 +1,9 @@
 # cheers-mp-router
-微信小程序路由
+🚦精巧强大的小程序路由
+
+## 催更、钉钉交流群：
+
+<img width="200" alt="钉钉交流群" src="https://image-static.segmentfault.com/428/097/4280971404-5e8c793fa8d8f_articlex" />
 
 ### 使用
 
