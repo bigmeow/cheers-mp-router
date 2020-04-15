@@ -55,6 +55,49 @@ const commaRE = /%2C/g;
 const encode = (str) => encodeURIComponent(str)
     .replace(encodeReserveRE, encodeReserveReplacer)
     .replace(commaRE, ',');
+const decode = decodeURIComponent;
+function parseQuery(query) {
+    const res = {};
+    query = query.trim().replace(/^(\?|#|&)/, '');
+    if (!query) {
+        return res;
+    }
+    query.split('&').forEach(param => {
+        const parts = param.replace(/\+/g, ' ').split('=');
+        const key = decode(parts.shift());
+        const val = parts.length > 0 ? decode(parts.join('=')) : null;
+        if (res[key] === undefined) {
+            res[key] = val;
+        }
+        else if (Array.isArray(res[key])) {
+            res[key].push(val);
+        }
+        else {
+            res[key] = [res[key], val];
+        }
+    });
+    return res;
+}
+/**
+ * 将 'k1=v1&k2=v2' 格式的字符串转换成 query 对象
+ * @param query （可选）要转换的字符串，格式类似于 '?name=admin&password=123' 或者 'name=admin&password=123'
+ * @param extraQuery （可选）将转换后的 query 对象 附加到此 query 对象身上
+ * @param _parseQuery （可选）自定义转换函数
+ */
+function resolveQuery(query, extraQuery = {}, _parseQuery) {
+    const parse = _parseQuery || parseQuery;
+    let parsedQuery;
+    try {
+        parsedQuery = parse(query || '');
+    }
+    catch (e) {
+        parsedQuery = {};
+    }
+    for (const key in extraQuery) {
+        parsedQuery[key] = extraQuery[key];
+    }
+    return parsedQuery;
+}
 /**
  * 将 query 对象序列化成 'k1=v1&k2=v2' 格式化的字符串
  * @param obj
@@ -270,6 +313,10 @@ class Router {
 }
 /** 路由栈上限数 */
 Router.MAX_STACK_LENGTH = 10;
+/** 将 query 对象序列化成 'k1=v1&k2=v2' 格式化的字符串 */
+Router.stringifyQuery = stringifyQuery;
+/** 将 'k1=v1&k2=v2' 格式的字符串转换成 query 对象 */
+Router.resolveQuery = resolveQuery;
 
 module.exports = Router;
 //# sourceMappingURL=index.js.map

@@ -181,4 +181,8 @@ class Router {
 exports.default = Router;
 /** 路由栈上限数 */
 Router.MAX_STACK_LENGTH = 10;
+/** 将 query 对象序列化成 'k1=v1&k2=v2' 格式化的字符串 */
+Router.stringifyQuery = query_1.stringifyQuery;
+/** 将 'k1=v1&k2=v2' 格式的字符串转换成 query 对象 */
+Router.resolveQuery = query_1.resolveQuery;
 //# sourceMappingURL=index.js.map

@@ -1,6 +1,6 @@
 import defaultAdapter from './adapter/wechatAdapter'
 import { runQueue } from './utils/async'
-import { stringifyQuery } from './utils/query'
+import { stringifyQuery, resolveQuery } from './utils/query'
 
 /**
  * Route 构造实例选项
@@ -101,7 +101,7 @@ function generateRoute(routeConfig: RouteConfig, query: any) {
     path: routeConfig.path,
     fullPath: routeConfig.path + stringifyQuery(query),
     query: Object.assign({}, query),
-    meta: routeConfig.meta || {}
+    meta: routeConfig.meta || {},
   }
   return route
 }
@@ -133,10 +133,16 @@ export default class Router {
   /** 路由栈上限数 */
   public static MAX_STACK_LENGTH = 10
 
+  /** 将 query 对象序列化成 'k1=v1&k2=v2' 格式化的字符串 */
+  public static stringifyQuery = stringifyQuery
+
+  /** 将 'k1=v1&k2=v2' 格式的字符串转换成 query 对象 */
+  public static resolveQuery = resolveQuery
+
   constructor(options: RouterOptions = {}) {
     if (options.routes) {
       // 统一替换处理，不以/前缀开头
-      options.routes.forEach(route => route.path.replace(/^\//, ''))
+      options.routes.forEach((route) => route.path.replace(/^\//, ''))
       this.routeConfigList = options.routes
     }
     if (options.adapter) {
@@ -165,7 +171,7 @@ export default class Router {
 
   private switchRoute(location: Location) {
     return new Promise(async (resolve, reject) => {
-      let routeConfig = this.routeConfigList.find(item => item.name === location.name)
+      let routeConfig = this.routeConfigList.find((item) => item.name === location.name)
       if (!routeConfig) {
         reject(new Error('未找到该路由:' + location.name))
         return
@@ -183,7 +189,7 @@ export default class Router {
       }
 
       const iterator = (hook: NavigationGuard, next: Function) => {
-        hook(toRoute, currentRoute, async v => {
+        hook(toRoute, currentRoute, async (v) => {
           if (v === false) return
           else if (typeof v === 'object') {
             try {
@@ -203,10 +209,10 @@ export default class Router {
             path: '/' + toRoute.fullPath,
             isTab: routeConfig!.isTab || false,
             replace: location.replace,
-            reLaunch: location.reLaunch
+            reLaunch: location.reLaunch,
           })
           resolve()
-          this.afterHooks.forEach(hook => {
+          this.afterHooks.forEach((hook) => {
             hook && hook(toRoute, currentRoute)
           })
         } catch (error) {
@@ -246,10 +252,10 @@ export default class Router {
           // const route = this.stack[targetIndex]
           resolve()
         },
-        fail: res => {
+        fail: (res) => {
           // {"errMsg":"navigateBack:fail cannot navigate back at first page."}
           reject(res)
-        }
+        },
       })
     })
   }
@@ -271,7 +277,7 @@ export default class Router {
     if (path.indexOf('?') > -1) {
       path = path.substring(0, path.indexOf('?'))
     }
-    return this.routeConfigList.find(item => item.path === path)
+    return this.routeConfigList.find((item) => item.path === path)
   }
 
   /**

@@ -1,3 +1,4 @@
+import { stringifyQuery, resolveQuery } from './utils/query';
 /**
  * Route 构造实例选项
  */
@@ -89,6 +90,10 @@ export default class Router {
     private adapter;
     /** 路由栈上限数 */
     static MAX_STACK_LENGTH: number;
+    /** 将 query 对象序列化成 'k1=v1&k2=v2' 格式化的字符串 */
+    static stringifyQuery: typeof stringifyQuery;
+    /** 将 'k1=v1&k2=v2' 格式的字符串转换成 query 对象 */
+    static resolveQuery: typeof resolveQuery;
     constructor(options?: RouterOptions);
     /**
      * 注册路由前置守卫钩子
