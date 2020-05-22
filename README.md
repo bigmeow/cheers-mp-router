@@ -54,4 +54,5 @@ router.push({ name: "product-details", query: { id: "sb" } })
 
 具体[查看这里](./dist/types/index.d.ts)
 
-
+## TODO
+- [ ] 在 cheers-mp 脚手架中获得构建级别的路由支持、支持子包
