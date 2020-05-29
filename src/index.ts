@@ -169,7 +169,7 @@ export default class Router {
     return registerHook(this.afterHooks, hook)
   }
 
-  private switchRoute(location: Location) {
+  private switchRoute(location: Location): Promise<any> {
     return new Promise(async (resolve, reject) => {
       let routeConfig = this.routeConfigList.find((item) => item.name === location.name)
       if (!routeConfig) {
@@ -204,14 +204,14 @@ export default class Router {
       }
       runQueue(this.beforeHooks, iterator, async () => {
         try {
-          await this.adapter({
+          const result = await this.adapter({
             // 跳转前统一加上 "/" 前缀
             path: '/' + toRoute.fullPath,
             isTab: routeConfig!.isTab || false,
             replace: location.replace,
             reLaunch: location.reLaunch,
           })
-          resolve()
+          resolve(result)
           this.afterHooks.forEach((hook) => {
             hook && hook(toRoute, currentRoute)
           })
@@ -226,7 +226,7 @@ export default class Router {
    * 保留当前页面，跳转到应用内的某个页面。
    * @param location 路由跳转参数
    */
-  push(location: Location) {
+  push(location: Location): Promise<WechatMiniprogram.NavigateToSuccessCallbackResult> {
     return this.switchRoute(location)
   }
 
@@ -234,7 +234,7 @@ export default class Router {
    * 关闭当前页面，跳转到应用内的某个页面。
    * @param location 路由跳转参数
    */
-  replace(location: Location) {
+  replace(location: Location): Promise<WechatMiniprogram.GeneralCallbackResult> {
     location.replace = true
     return this.switchRoute(location)
   }
@@ -243,14 +243,14 @@ export default class Router {
    *  关闭当前页面，返回上一页面或多级页面
    * @param delta 返回的页面数，如果 delta 大于现有页面数，则返回到首页。
    */
-  back(delta = 1) {
+  back(delta = 1): Promise<WechatMiniprogram.GeneralCallbackResult> {
     if (delta < 1) delta = 1
     return new Promise((resolve, reject) => {
       wx.navigateBack({
         delta,
-        success: () => {
+        success: (res) => {
           // const route = this.stack[targetIndex]
-          resolve()
+          resolve(res)
         },
         fail: (res) => {
           // {"errMsg":"navigateBack:fail cannot navigate back at first page."}
@@ -264,7 +264,7 @@ export default class Router {
    * 关闭所有页面，打开到应用内的某个页面
    * @param location 路由跳转参数
    */
-  reLaunch(location: Location) {
+  reLaunch(location: Location): Promise<WechatMiniprogram.GeneralCallbackResult> {
     location.reLaunch = true
     return this.switchRoute(location)
   }

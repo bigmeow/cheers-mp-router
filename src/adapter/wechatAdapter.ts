@@ -1,6 +1,8 @@
 import { AdapterConfig } from '../index'
 
-export default function wechatAdapter(adapterconfig: AdapterConfig): Promise<any> {
+export default function wechatAdapter(
+  adapterconfig: AdapterConfig
+): Promise<WechatMiniprogram.GeneralCallbackResult> {
   return new Promise((resolve, reject) => {
     let jumpMethod: any
     if (adapterconfig.reLaunch) {
@@ -14,8 +16,8 @@ export default function wechatAdapter(adapterconfig: AdapterConfig): Promise<any
     }
     jumpMethod.bind(wx)({
       url: adapterconfig.path,
-      success: () => {
-        resolve()
+      success: (res: WechatMiniprogram.GeneralCallbackResult) => {
+        resolve(res)
       },
       fail: (res: WechatMiniprogram.GeneralCallbackResult) => {
         reject(res)
