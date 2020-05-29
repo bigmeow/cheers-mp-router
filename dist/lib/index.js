@@ -14,7 +14,7 @@ function generateRoute(routeConfig, query) {
         path: routeConfig.path,
         fullPath: routeConfig.path + query_1.stringifyQuery(query),
         query: Object.assign({}, query),
-        meta: routeConfig.meta || {}
+        meta: routeConfig.meta || {},
     };
     return route;
 }
@@ -34,7 +34,7 @@ class Router {
         this.adapter = wechatAdapter_1.default;
         if (options.routes) {
             // 统一替换处理，不以/前缀开头
-            options.routes.forEach(route => route.path.replace(/^\//, ''));
+            options.routes.forEach((route) => route.path.replace(/^\//, ''));
             this.routeConfigList = options.routes;
         }
         if (options.adapter) {
@@ -60,7 +60,7 @@ class Router {
     }
     switchRoute(location) {
         return new Promise(async (resolve, reject) => {
-            let routeConfig = this.routeConfigList.find(item => item.name === location.name);
+            let routeConfig = this.routeConfigList.find((item) => item.name === location.name);
             if (!routeConfig) {
                 reject(new Error('未找到该路由:' + location.name));
                 return;
@@ -93,15 +93,15 @@ class Router {
             };
             async_1.runQueue(this.beforeHooks, iterator, async () => {
                 try {
-                    await this.adapter({
+                    const result = await this.adapter({
                         // 跳转前统一加上 "/" 前缀
                         path: '/' + toRoute.fullPath,
                         isTab: routeConfig.isTab || false,
                         replace: location.replace,
-                        reLaunch: location.reLaunch
+                        reLaunch: location.reLaunch,
                     });
-                    resolve();
-                    this.afterHooks.forEach(hook => {
+                    resolve(result);
+                    this.afterHooks.forEach((hook) => {
                         hook && hook(toRoute, currentRoute);
                     });
                 }
@@ -136,14 +136,14 @@ class Router {
         return new Promise((resolve, reject) => {
             wx.navigateBack({
                 delta,
-                success: () => {
+                success: (res) => {
                     // const route = this.stack[targetIndex]
-                    resolve();
+                    resolve(res);
                 },
-                fail: res => {
+                fail: (res) => {
                     // {"errMsg":"navigateBack:fail cannot navigate back at first page."}
                     reject(res);
-                }
+                },
             });
         });
     }
@@ -163,7 +163,7 @@ class Router {
         if (path.indexOf('?') > -1) {
             path = path.substring(0, path.indexOf('?'));
         }
-        return this.routeConfigList.find(item => item.path === path);
+        return this.routeConfigList.find((item) => item.path === path);
     }
     /**
      * 获取当前路由

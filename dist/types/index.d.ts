@@ -1,3 +1,4 @@
+/// <reference types="miniprogram-api-typings" />
 import { stringifyQuery, resolveQuery } from './utils/query';
 /**
  * Route 构造实例选项
@@ -110,22 +111,22 @@ export default class Router {
      * 保留当前页面，跳转到应用内的某个页面。
      * @param location 路由跳转参数
      */
-    push(location: Location): Promise<unknown>;
+    push(location: Location): Promise<WechatMiniprogram.NavigateToSuccessCallbackResult>;
     /**
      * 关闭当前页面，跳转到应用内的某个页面。
      * @param location 路由跳转参数
      */
-    replace(location: Location): Promise<unknown>;
+    replace(location: Location): Promise<WechatMiniprogram.GeneralCallbackResult>;
     /**
      *  关闭当前页面，返回上一页面或多级页面
      * @param delta 返回的页面数，如果 delta 大于现有页面数，则返回到首页。
      */
-    back(delta?: number): Promise<unknown>;
+    back(delta?: number): Promise<WechatMiniprogram.GeneralCallbackResult>;
     /**
      * 关闭所有页面，打开到应用内的某个页面
      * @param location 路由跳转参数
      */
-    reLaunch(location: Location): Promise<unknown>;
+    reLaunch(location: Location): Promise<WechatMiniprogram.GeneralCallbackResult>;
     /**
      * 根据路径获取路由配置
      * @param path 小程序路径path(不以/开头)
