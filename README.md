@@ -5,14 +5,14 @@
 
 <img width="200" alt="钉钉交流群" src="https://image-static.segmentfault.com/428/097/4280971404-5e8c793fa8d8f_articlex" />
 
-### 使用
+## 使用
 
-安装
+#### 安装
 ``` bash
 npm i cheers-mp-router
 ```
 
-引入
+#### typescript引入
 ``` typescript
 import Router, { RouteConfig } from "cheers-mp-router";
 
@@ -55,4 +55,5 @@ router.push({ name: "product-details", query: { id: "sb" } })
 具体[查看这里](./dist/types/index.d.ts)
 
 ## TODO
-- [ ] 在 cheers-mp 脚手架中获得构建级别的路由支持、支持子包
+- [x] 在 [cheers-mp](https://github.com/bigmeow/cheers-mp) 脚手架中使用时获得构建级别的路由支持、子包构建支持
+- [ ] push 支持 [eventChannel](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.navigateTo.html) 事件监听
