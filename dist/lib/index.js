@@ -99,6 +99,7 @@ class Router {
                         isTab: routeConfig.isTab || false,
                         replace: location.replace,
                         reLaunch: location.reLaunch,
+                        events: location.events,
                     });
                     resolve(result);
                     this.afterHooks.forEach((hook) => {
@@ -112,17 +113,21 @@ class Router {
         });
     }
     /**
-     * 保留当前页面，跳转到应用内的某个页面。
+     * 保留当前页面，跳转到应用内的某个页面, 对应小程序的 `wx.navigateTo` , 使用 `router.back()` 可以返回到原页面。
+     * 如果页面是 tabbar 会自动切换成 `wx.switchTab` 跳转；
+     * 如果小程序中页面栈超过十层，会自动切换成 `wx.redirectTo` 跳转。
      * @param location 路由跳转参数
      */
     push(location) {
         return this.switchRoute(location);
     }
     /**
-     * 关闭当前页面，跳转到应用内的某个页面。
+     * 关闭当前页面，跳转到应用内的某个页面;
+     * 如果页面是 `tabbar` 会自动切换成 `wx.switchTab` 跳转，但是 `tabbar` 不支持传递参数。
      * @param location 路由跳转参数
      */
     replace(location) {
+        ;
         location.replace = true;
         return this.switchRoute(location);
     }
@@ -152,6 +157,7 @@ class Router {
      * @param location 路由跳转参数
      */
     reLaunch(location) {
+        ;
         location.reLaunch = true;
         return this.switchRoute(location);
     }

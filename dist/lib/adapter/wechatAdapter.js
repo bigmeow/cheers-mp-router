@@ -15,7 +15,7 @@ function wechatAdapter(adapterconfig) {
         else {
             jumpMethod = wx.navigateTo;
         }
-        jumpMethod.bind(wx)({
+        const params = {
             url: adapterconfig.path,
             success: (res) => {
                 resolve(res);
@@ -23,7 +23,11 @@ function wechatAdapter(adapterconfig) {
             fail: (res) => {
                 reject(res);
             },
-        });
+        };
+        if (adapterconfig.events) {
+            params.events = adapterconfig.events;
+        }
+        jumpMethod.bind(wx)(params);
     });
 }
 exports.default = wechatAdapter;
