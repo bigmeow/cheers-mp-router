@@ -32,14 +32,27 @@ interface Dictionary<T> {
   [key: string]: T
 }
 
-/**
- * 路由函数调用时的传参
- */
-export interface Location {
+export interface BaseLocation {
   /** 页面对应的路由名称 */
   name: string
-  /** 传参（对tab页面无效） */
+  /** 传参（对`tabbar`页面无效） */
   query?: Dictionary<string | (string | null)[] | null | undefined>
+}
+
+/**
+ * 路由push函数调用时的传参
+ */
+export interface PushLocation extends BaseLocation {
+  /** 是否使用重定向,默认false */
+  replace?: boolean
+  /** 页面间通信接口，用于监听被打开页面发送到当前页面的数据。基础库 2.7.3 开始支持。仅对 router.push 支持 */
+  events?: WechatMiniprogram.IAnyObject
+}
+
+/**
+ * 路由函数调用时的完整传参
+ */
+export interface Location extends PushLocation {
   /** 是否使用重定向 */
   replace?: boolean
   /** 是否关闭所有页面，打开到应用内的某个页面 */
@@ -77,6 +90,8 @@ export interface AdapterConfig {
   replace?: boolean
   /** 是否关闭所有页面，打开到应用内的某个页面 */
   reLaunch?: boolean
+  /** 页面间通信接口，用于监听被打开页面发送到当前页面的数据。基础库 2.7.3 开始支持。仅对 router.push 支持 */
+  events?: WechatMiniprogram.IAnyObject
 }
 /**
  * 路由适配器
@@ -210,6 +225,7 @@ export default class Router {
             isTab: routeConfig!.isTab || false,
             replace: location.replace,
             reLaunch: location.reLaunch,
+            events: location.events,
           })
           resolve(result)
           this.afterHooks.forEach((hook) => {
@@ -223,19 +239,22 @@ export default class Router {
   }
 
   /**
-   * 保留当前页面，跳转到应用内的某个页面。
+   * 保留当前页面，跳转到应用内的某个页面, 对应小程序的 `wx.navigateTo` , 使用 `router.back()` 可以返回到原页面。
+   * 如果页面是 tabbar 会自动切换成 `wx.switchTab` 跳转；
+   * 如果小程序中页面栈超过十层，会自动切换成 `wx.redirectTo` 跳转。
    * @param location 路由跳转参数
    */
-  push(location: Location): Promise<WechatMiniprogram.NavigateToSuccessCallbackResult> {
+  push(location: PushLocation): Promise<WechatMiniprogram.NavigateToSuccessCallbackResult> {
     return this.switchRoute(location)
   }
 
   /**
-   * 关闭当前页面，跳转到应用内的某个页面。
+   * 关闭当前页面，跳转到应用内的某个页面;
+   * 如果页面是 `tabbar` 会自动切换成 `wx.switchTab` 跳转，但是 `tabbar` 不支持传递参数。
    * @param location 路由跳转参数
    */
-  replace(location: Location): Promise<WechatMiniprogram.GeneralCallbackResult> {
-    location.replace = true
+  replace(location: BaseLocation): Promise<WechatMiniprogram.GeneralCallbackResult> {
+    ;(location as Location).replace = true
     return this.switchRoute(location)
   }
 
@@ -264,8 +283,8 @@ export default class Router {
    * 关闭所有页面，打开到应用内的某个页面
    * @param location 路由跳转参数
    */
-  reLaunch(location: Location): Promise<WechatMiniprogram.GeneralCallbackResult> {
-    location.reLaunch = true
+  reLaunch(location: BaseLocation): Promise<WechatMiniprogram.GeneralCallbackResult> {
+    ;(location as Location).reLaunch = true
     return this.switchRoute(location)
   }
 

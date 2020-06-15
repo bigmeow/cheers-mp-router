@@ -14,14 +14,19 @@ export default function wechatAdapter(
     } else {
       jumpMethod = wx.navigateTo
     }
-    jumpMethod.bind(wx)({
+    const params: WechatMiniprogram.NavigateToOption = {
       url: adapterconfig.path,
-      success: (res: WechatMiniprogram.GeneralCallbackResult) => {
+      success: (res) => {
         resolve(res)
       },
-      fail: (res: WechatMiniprogram.GeneralCallbackResult) => {
+      fail: (res) => {
         reject(res)
       },
-    })
+    }
+
+    if (adapterconfig.events) {
+      params.events = adapterconfig.events
+    }
+    jumpMethod.bind(wx)(params)
   })
 }
