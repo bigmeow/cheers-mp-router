@@ -56,4 +56,4 @@ router.push({ name: "product-details", query: { id: "sb" } })
 
 ## TODO
 - [x] 在 [cheers-mp](https://github.com/bigmeow/cheers-mp) 脚手架中使用时获得构建级别的路由支持、子包构建支持
-- [ ] push 支持 [eventChannel](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.navigateTo.html) 事件监听
+- [x] push 支持 [eventChannel](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.navigateTo.html) 事件监听
