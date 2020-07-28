@@ -327,4 +327,5 @@ Router.stringifyQuery = stringifyQuery;
 Router.resolveQuery = resolveQuery;
 
 module.exports = Router;
+module.exports.default = Router;
 //# sourceMappingURL=index.js.map
