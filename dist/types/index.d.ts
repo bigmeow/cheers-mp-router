@@ -19,8 +19,6 @@ export interface RouteConfig {
     isTab?: boolean;
     /** 携带的额外的参数 */
     meta?: {
-        /** 访问路由需要的权限：0 表示不需要任何权限； 1 表示需要 微信授权（可以没有手机号注册）； 2表示必须要手机号注册并且使用手机号登录获得了token */
-        authType?: 0 | 1 | 2;
         [key: string]: any;
     };
 }
