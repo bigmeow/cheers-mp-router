@@ -99,7 +99,7 @@
     "jest-config": "^23.6.0",
     "lint-staged": "^8.0.0",
     "lodash.camelcase": "^4.3.0",
-    "miniprogram-api-typings": "^2.10.3-1",
+    "miniprogram-api-typings": "^3.3.1",
     "prettier": "^2.0.4",
     "prompt": "^1.0.0",
     "replace-in-file": "^3.4.2",
