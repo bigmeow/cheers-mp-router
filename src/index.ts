@@ -219,7 +219,9 @@ export default class Router {
         try {
           const result = await this.adapter({
             // 非插件页跳转前统一加上 "/" 前缀
-            path: (/^plugin/.test(toRoute.fullPath) ? '' : '/') + toRoute.fullPath,
+            path:
+              (/^(plugin-private|plugin):\/\//.test(toRoute.fullPath) ? '' : '/') +
+              toRoute.fullPath,
             isTab: routeConfig!.isTab || false,
             replace: location.replace,
             reLaunch: location.reLaunch,
