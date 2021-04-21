@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.stringifyQuery = exports.resolveQuery = void 0;
 const encodeReserveRE = /[!'()*]/g;
 const encodeReserveReplacer = (c) => '%' + c.charCodeAt(0).toString(16);
 const commaRE = /%2C/g;

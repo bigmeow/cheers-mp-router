@@ -231,8 +231,9 @@ class Router {
             runQueue(this.beforeHooks, iterator, async () => {
                 try {
                     const result = await this.adapter({
-                        // 跳转前统一加上 "/" 前缀
-                        path: '/' + toRoute.fullPath,
+                        // 非插件页跳转前统一加上 "/" 前缀
+                        path: (/^(plugin-private|plugin):\/\//.test(toRoute.fullPath) ? '' : '/') +
+                            toRoute.fullPath,
                         isTab: routeConfig.isTab || false,
                         replace: location.replace,
                         reLaunch: location.reLaunch,
@@ -328,4 +329,3 @@ Router.resolveQuery = resolveQuery;
 
 module.exports = Router;
 module.exports.default = Router;
-//# sourceMappingURL=index.js.map
